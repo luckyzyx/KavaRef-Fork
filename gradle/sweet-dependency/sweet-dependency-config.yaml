@@ -1,0 +1,28 @@
+preferences:
+  autowire-on-sync-mode: UPDATE_OPTIONAL_DEPENDENCIES
+  repositories-mode: FAIL_ON_PROJECT_REPOS
+
+repositories:
+  gradle-plugin-portal:
+    scope: PLUGINS
+  google:
+  maven-central:
+
+plugins:
+  org.jetbrains.kotlin.jvm:
+    alias: kotlin-jvm
+    version: 2.1.21
+  org.jetbrains.dokka:
+    alias: kotlin-dokka
+    version: 1.9.20
+    auto-update: false
+  com.vanniktech.maven.publish:
+    alias: maven-publish
+    version: 0.33.0
+
+libraries:
+  org.slf4j:
+    slf4j-api:
+      version: 2.0.17
+    slf4j-simple:
+      version-ref: <this>::slf4j-api
