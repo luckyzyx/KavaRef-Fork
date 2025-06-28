@@ -59,7 +59,7 @@ object MemberProcessor {
 
     /**
      * Global [Resolver] used by KavaRef to resolve members.
-     * 
+     *
      * You can change this resolver to use a custom member resolver, which will affect global behavior.
      */
     @JvmStatic
@@ -91,7 +91,7 @@ object MemberProcessor {
          * @param declaringClass the class to resolve methods from.
          * @return [List]<[Method]>
          */
-        open fun <T : Any> getDeclaredMethods(declaringClass: Class<T>): List<Method> = 
+        open fun <T : Any> getDeclaredMethods(declaringClass: Class<T>): List<Method> =
             runCatching { declaringClass.declaredMethods.toList() }.onFailure {
                 KavaRefRuntime.warn("Failed to get declared methods in $this because got an exception.", it)
             }.getOrNull() ?: emptyList()
@@ -127,16 +127,19 @@ object MemberProcessor {
             ) { declaringClass ->
                 methodFilters(condition, configuration, declaringClass)
             }
+
             is ConstructorCondition -> resolveInClass(
                 condition, configuration, configuration.declaringClass
             ) { declaringClass ->
                 constructorFilters(condition, configuration, declaringClass)
             }
+
             is FieldCondition -> resolveInClass(
                 condition, configuration, configuration.declaringClass
             ) { declaringClass ->
                 fieldFilters(condition, configuration, declaringClass)
             }
+
             else -> error("Unsupported condition type: $condition")
         } as List<R>
     }
@@ -328,11 +331,13 @@ object MemberProcessor {
         configuration: MemberCondition.Configuration<T>
     ): List<R> {
         fun splicingString(name: String) = "No $name found matching the condition for " +
-            "current class${if (configuration.superclass) " (Also tried for superclass)" else ""}.\n" +
-            buildConditionTable(condition, configuration) + "\n" +
-            "Suggestion: ${if (!configuration.superclass) "Members in superclass are not reflected in the current class, " +
+          "current class${if (configuration.superclass) " (Also tried for superclass)" else ""}.\n" +
+          buildConditionTable(condition, configuration) + "\n" +
+          "Suggestion: ${
+              if (!configuration.superclass) "Members in superclass are not reflected in the current class, " +
                 "you can try adding superclass() in your condition and try again. "
-            else "Check if the conditions are correct and valid, and try again. "}"
+              else "Check if the conditions are correct and valid, and try again. "
+          }"
 
         val exceptionNote = "If you want to ignore this exception, adding optional() in your condition."
         val message = when (condition) {
@@ -342,19 +347,24 @@ object MemberProcessor {
             else -> error("Unsupported condition type: $condition")
         }
 
-        return if (configuration.optional == MemberCondition.Configuration.Optional.NO) throw when (condition) {
-            is MethodCondition -> NoSuchMethodException("$message\n$exceptionNote\n$PRODUCT_DESCRIPTION")
-            is ConstructorCondition -> NoSuchMethodException("$message\n$exceptionNote\n$PRODUCT_DESCRIPTION")
-            is FieldCondition -> NoSuchFieldException("$message\n$exceptionNote\n$PRODUCT_DESCRIPTION")
-            else -> error("Unsupported condition type: $condition")
-        } else {
-            if (configuration.optional == MemberCondition.Configuration.Optional.NOTICE)
+        return when (configuration.optional) {
+            MemberCondition.Configuration.Optional.NO -> throw when (condition) {
+                is MethodCondition -> NoSuchMethodException("$message\n$exceptionNote\n$PRODUCT_DESCRIPTION")
+                is ConstructorCondition -> NoSuchMethodException("$message\n$exceptionNote\n$PRODUCT_DESCRIPTION")
+                is FieldCondition -> NoSuchFieldException("$message\n$exceptionNote\n$PRODUCT_DESCRIPTION")
+                else -> error("Unsupported condition type: $condition")
+            }
+
+            MemberCondition.Configuration.Optional.NOTICE -> {
                 KavaRefRuntime.warn(message.trim())
-            emptyList()
+                emptyList()
+            }
+
+            MemberCondition.Configuration.Optional.SILENT -> emptyList()
         }
     }
 
-    private inline fun <reified M : Member, T : Any> MemberResolver<M, T>.apply(configuration: MemberCondition.Configuration<T>) = 
+    private inline fun <reified M : Member, T : Any> MemberResolver<M, T>.apply(configuration: MemberCondition.Configuration<T>) =
         apply { configuration.memberInstance?.let { if (this is InstanceAwareResolver) of(it) } }
 
     private fun <T, R> Sequence<T>.filter(
@@ -405,12 +415,12 @@ object MemberProcessor {
     ): Boolean {
         // If size is different at first, return false.
         if (conditionKey.size != typesValue.size) return false
-        
+
         val isMatched = conditionKey.filterIndexed { index, type ->
             val target = typesValue[index]
             compareElementTypes(type, target, configuration)
         }.size == typesValue.size
-        
+
         return isMatched
     }
 
@@ -482,10 +492,11 @@ object MemberProcessor {
     private val <T : Any> MemberCondition.Configuration<T>.currentProcessorResolver
         get() = processorResolver ?: globalResolver
 
-    private val Member.annotations get() = when (this) {
-        is AnnotatedElement -> declaredAnnotations
-        else -> error("Unsupported member type: $this")
-    }
+    private val Member.annotations
+        get() = when (this) {
+            is AnnotatedElement -> declaredAnnotations
+            else -> error("Unsupported member type: $this")
+        }
 
     private fun Member.toGenericString() = when (this) {
         is Method -> toGenericString()
@@ -507,6 +518,7 @@ object MemberProcessor {
                 toClass(configuration.declaringClass.classLoader)
             // If enabled optional mode, use the "Object.class" as the default return type when not found.
             else toClassOrNull(configuration.declaringClass.classLoader) ?: classOf<Any>()
+
             is VagueType -> javaClass
             else -> error("Unsupported type: $this, supported types are Class, KClass, String and VagueType.")
         }.parseVagueType()
