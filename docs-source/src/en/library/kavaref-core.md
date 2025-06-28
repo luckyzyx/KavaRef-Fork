@@ -489,6 +489,25 @@ but we **do not recommend this**, which will mask the problem unless it is neces
 If you set `optional()`, please do not use `firstMethod`, `firstConstructor` and other methods to get a single result.
 Because they throw an exception with empty list when there is no result, you can use the method with the suffix `OrNull` to get a single result.
 
+But one thing you need to pay attention to here is that if you do not set `optional()`,
+then methods such as `firstMethodOrNull` will still throw exceptions when there is no result**, which is the expected behavior because `method { ... }`
+This is the "build" operation of the filter. Exceptions are handled here.
+Methods such as `firstMethodOrNull` are just an encapsulation.
+It is an exception handling of Kotlin's own standard library whether the result `List` is empty. It does not participate in exception handling of KavaRef filters.
+
+So you must do it like the following.
+
+> The following example
+
+```kotlin
+Test::class.resolve()
+    // Set optional conditions.
+    .optional()
+    .firstMethodOrNull {
+        name = "doNonExistentMethod"
+    } // Return MethodResolver or null.
+```
+
 :::
 
 ### Log Management
