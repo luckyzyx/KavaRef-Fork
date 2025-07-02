@@ -474,6 +474,22 @@ No method found matching the condition for current class.
 如果你设置了 `optional()`，那么请不要使用 `firstMethod`、`firstConstructor` 等方法来获取单个结果，
 因为它们会在没有结果时抛出列表为空的异常，你可以使用后缀为 `OrNull` 的方法来获取单个结果。
 
+但是这里需要注意一个事情，**如果你没有设置 `optional()`，那么 `firstMethodOrNull` 等方法依然会在没有结果时抛出异常**，这是预期行为，因为 `method { ... }`
+才是过滤器的 “构建” 操作，异常在此处理，`firstMethodOrNull` 等方法只是一个封装，是对结果 `List` 是否为空的 Kotlin 自身标准库异常处理，不参与 KavaRef 过滤器的异常处理。
+
+所以你一定要像下面这样做。
+
+> 示例如下
+
+```kotlin
+Test::class.resolve()
+    // 设置可选条件
+    .optional()
+    .firstMethodOrNull {
+        name = "doNonExistentMethod"
+    } // 返回 MethodResolver 或 null
+```
+
 :::
 
 ### 日志管理
