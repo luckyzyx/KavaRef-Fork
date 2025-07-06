@@ -69,7 +69,7 @@ KavaRef 采用链式调用的设计方案，它对可用的 Java 反射 API (例
 
 ``` :no-line-numbers
 KavaRef
-└── KClass/Class/Any.resolve()
+└── KClass/Class.resolve()
     ├── method()
     ├── constructor()
     └── field()
@@ -192,7 +192,7 @@ Test::class
 
 ```kotlin
 // 在这里，Test 的实例 test 会被传给 KavaRef 并获取 test::class.java
-test.resolve()
+test.asResolver()
     .firstMethod {
         name = "doTask"
         parameters(String::class)
@@ -208,7 +208,7 @@ test.resolve()
 // 假设这就是这个 Class 的实例
 val test: Test
 // 使用 KavaRef 调用并执行
-val isTaskRunning = test.resolve()
+val isTaskRunning = test.asResolver()
     .firstField {
         name = "isTaskRunning"
         type = Boolean::class
@@ -250,6 +250,12 @@ val test = Test::class.resolve()
 
 :::
 
+::: warning
+
+`Any.resolve()` 方法已在 `1.0.1` 版本被弃用，因为它会污染命名空间 (例如 `File.resolve("/path/to/file")`)，现在请使用 `Any.asResolver()` 来代替。
+
+:::
+
 ::: danger
 
 在继承于 `InstanceAwareResolver` 的 `MemberResolver` 中，`of(instance)` 的类型要求与当前反射的 `Class` 实例泛型类型相同，
@@ -286,7 +292,7 @@ myClass.resolve()
 // 假设这就是这个 Class 的实例
 val test: Test
 // 使用 KavaRef 调用并执行
-test.resolve()
+Test::class.resolve()
     .firstMethod {
         name = "release"
         // 使用 VagueType 来填充不想填写的类型，同时保证其它类型能够匹配
@@ -314,7 +320,7 @@ test.resolve()
 // 假设这就是这个 Class 的实例
 val test: Test
 // 使用 KavaRef 调用并执行
-test.resolve()
+Test::class.resolve()
     .firstMethod {
         // 使用 lambda 来设置方法名
         name {
@@ -323,7 +329,7 @@ test.resolve()
         }
         // 设置参数类型
         parameters(String::class)
-    }.invoke("task_name")
+    }.of(test).invoke("task_name")
 ```
 
 ### 泛型条件
@@ -338,7 +344,7 @@ KavaRef 支持添加泛型过滤条件，你可以使用 `TypeMatcher` 提供的
 // 假设这就是这个 Class 的实例
 val box: Box<String>
 // 使用 KavaRef 调用并执行
-box.resolve()
+box.asResolver()
     .firstMethod {
         name = "print"
         // 设置泛型参数条件
@@ -363,13 +369,13 @@ box.resolve()
 // 假设这就是这个 Class 的实例
 val test: Test
 // 使用 KavaRef 调用并执行
-test.resolve()
+Test::class.resolve()
     .firstMethod {
         name = "doBaseTask"
         parameters(String::class)
         // 只需要添加这个条件
         superclass()
-    }.invoke("task_name")
+    }.of(test).invoke("task_name")
 ```
 
 这个时候我们就可以在超类中获取到这个方法了。
@@ -419,12 +425,12 @@ val tag = Test::class.resolve()
 // 假设这就是这个 Class 的实例
 val test: Test
 // 使用 KavaRef 调用并执行
-test.resolve()
+Test::class.resolve()
     .firstMethod {
         name = "doTask"
         // 使用字符串类型传入完整类名
         parameters("java.lang.String")
-    }.invoke("task_name")
+    }.of(test).invoke("task_name")
 ```
 
 ### 异常处理
@@ -548,12 +554,13 @@ KavaRef.setLogger(MyLogger())
 // 假设这就是这个 Class 的实例
 val test: Test
 // 使用 KavaRef 调用并执行
-test.resolve()
+Test::class.resolve()
     .method() // 条件开始
     .name("doTask")
     .parameters(String::class)
     .build() // 条件结束 (执行)
     .first()
+    .of(test) // 设置实例
     .invoke("task_name")
 ```
 
@@ -684,13 +691,13 @@ val myResolver = MyMemberProcessorResolver()
 // 假设这就是这个 Class 的实例
 val test: Test
 // 使用 KavaRef 调用并执行
-test.resolve()
+Test::class.resolve()
     // 设置自定义解析器
     .processor(myResolver)
     .firstMethod {
         name = "doTask"
         parameters(String::class)
-    }.invoke("task_name")
+    }.of(test).invoke("task_name")
 ```
 
 ::: tip

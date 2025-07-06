@@ -70,7 +70,7 @@ The relationship diagram is as follows.
 
 ``` :no-line-numbers
 KavaRef
-└── KClass/Class/Any.resolve()
+└── KClass/Class.resolve()
     ├── method()
     ├── constructor()
     └── field()
@@ -199,7 +199,7 @@ you can use this instance to create KavaRef reflections directly.
 ```kotlin
 // Here, the test instance test will be passed to
 // KavaRef and get test::class.java.
-test.resolve()
+test.asResolver()
     .firstMethod {
         name = "doTask"
         parameters(String::class)
@@ -215,7 +215,7 @@ Next, we need to get the `isTaskRunning` variable, which can be written in the f
 // Suppose this is an example of this Class.
 val test: Test
 // Call and execute with KavaRef.
-val isTaskRunning = test.resolve()
+val isTaskRunning = test.asResolver()
     .firstField {
         name = "isTaskRunning"
         type = Boolean::class
@@ -258,6 +258,12 @@ To set the current instance, if the reflection is static (static) member, you do
 
 :::
 
+::: warning
+
+The `Any.resolve()` function has been deprecated in `1.0.1` version because it pollutes the namespace (for example `File.resolve("/path/to/file")`), and now use `Any.asResolver()` instead.
+
+:::
+
 ::: danger
 
 In `MemberResolver` inherited from `InstanceAwareResolver`, the type of `of(instance)` requires the same type as the currently reflected `Class` instance generic type.
@@ -295,7 +301,7 @@ At this point, you can use the `parameters(...)` condition to use `VagueType` to
 // Suppose this is an example of this Class.
 val test: Test
 // Call and execute with KavaRef.
-test.resolve()
+Test::class.resolve()
     .firstMethod {
         name = "release"
         // Use VagueType to fill in the types you don't want to fill in,
@@ -325,7 +331,7 @@ Suppose we want to get the `doTask` method in `Test`, we can use the following i
 // Suppose this is an example of this Class.
 val test: Test
 // Call and execute with KavaRef.
-test.resolve()
+Test::class.resolve()
     .firstMethod {
         // Use lambda to set the method name.
         name {
@@ -334,7 +340,7 @@ test.resolve()
         }
         // Set parameter type.
         parameters(String::class)
-    }.invoke("task_name")
+    }.of(test).invoke("task_name")
 ```
 
 ### Generic Conditions
@@ -349,7 +355,7 @@ Suppose we need to filter the `print` method in `Box<String>`.
 // Suppose this is an example of this Class.
 val box: Box<String>
 // Call and execute with KavaRef.
-box.resolve()
+box.asResolver()
     .firstMethod {
         name = "print"
         // Set generic parameter conditions.
@@ -374,13 +380,13 @@ Without knowing the superclass name, we only need to add `superclass()` to the f
 // Suppose this is an example of this Class.
 val test: Test
 // Call and execute with KavaRef.
-test.resolve()
+Test::class.resolve()
     .firstMethod {
         name = "doBaseTask"
         parameters(String::class)
         // Just add this condition.
         superclass()
-    }.invoke("task_name")
+    }.of(test).invoke("task_name")
 ```
 
 At this time, we can get this method in the superclass.
@@ -432,12 +438,12 @@ You can also use string types to pass in full class names in conditions such as 
 // Suppose this is an example of this Class.
 val test: Test
 // Call and execute with KavaRef.
-test.resolve()
+Test::class.resolve()
     .firstMethod {
         name = "doTask"
         // Pass the full class name using string type.
         parameters("java.lang.String")
-    }.invoke("task_name")
+    }.of(test).invoke("task_name")
 ```
 
 ### Exception Handling
@@ -568,12 +574,13 @@ If you don't like the Kotlin lambda writing, you can create chained calls manual
 // Suppose this is an example of this Class.
 val test: Test
 // Call and execute with KavaRef.
-test.resolve()
+Test::class.resolve()
     .method() // Conditions begin.
     .name("doTask")
     .parameters(String::class)
     .build() // Conditions ends (executes)
     .first()
+    .of(test) // Setting up instance.
     .invoke("task_name")
 ```
 
@@ -705,13 +712,13 @@ val myResolver = MyMemberProcessorResolver()
 // Suppose this is an instance of this Class.
 val test: Test
 // Call and execute using KavaRef.
-test.resolve()
+Test::class.resolve()
     // Set custom resolver.
     .processor(myResolver)
     .firstMethod {
         name = "doTask"
         parameters(String::class)
-    }.invoke("task_name")
+    }.of(test).invoke("task_name")
 ```
 
 ::: tip
