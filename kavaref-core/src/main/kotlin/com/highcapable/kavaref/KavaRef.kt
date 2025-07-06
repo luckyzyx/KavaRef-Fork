@@ -61,7 +61,7 @@ class KavaRef private constructor() {
         /**
          * Create a [MemberScope] instance to start a new reflection.
          * @receiver the [KClass.java] to be reflected.
-         * @return [MemberScope]
+         * @return [MemberScope]<[T]>
          */
         @JvmSynthetic
         fun <T : Any> KClass<T>.resolve() = MemberScope(java.createConfiguration())
@@ -69,7 +69,7 @@ class KavaRef private constructor() {
         /**
          * Create a [MemberScope] instance to start a new reflection.
          * @receiver the [Class] to be reflected.
-         * @return [MemberScope]
+         * @return [MemberScope]<[T]>
          */
         @JvmStatic
         @JvmName("resolveClass")
@@ -79,7 +79,7 @@ class KavaRef private constructor() {
          * Create a [MemberScope] instance to start a new reflection.
          *
          * This function has been deprecated due to naming pollution, use [asResolver] instead.
-         * @return [MemberScope]
+         * @return [MemberScope]<[T]>
          */
         @Deprecated(message = "Use asResolver() instead.", replaceWith = ReplaceWith("this.asResolver()"))
         fun <T : Any> T.resolve() = asResolver()
@@ -88,7 +88,7 @@ class KavaRef private constructor() {
          * Create a [MemberScope] instance to start a new reflection.
          * @see KClass.resolve
          * @see Class.resolve
-         * @return [MemberScope]
+         * @return [MemberScope]<[T]>
          */
         @JvmStatic
         @JvmName("resolveObject")
