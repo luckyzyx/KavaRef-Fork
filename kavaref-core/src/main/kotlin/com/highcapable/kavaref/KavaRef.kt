@@ -67,14 +67,6 @@ class KavaRef private constructor() {
         fun <T : Any> KClass<T>.resolve() = MemberScope(java.createConfiguration())
 
         /**
-         * Create a [MemberScope] with a block to start a new reflection.
-         * @receiver the [KClass.java] to be reflected.
-         * @param block the block to configure the [MemberScope].
-         * @return [MemberScope]
-         */
-        inline fun <T : Any> KClass<T>.resolve(block: MemberScope<T>.() -> Unit) = resolve().apply(block)
-
-        /**
          * Create a [MemberScope] instance to start a new reflection.
          * @receiver the [Class] to be reflected.
          * @return [MemberScope]
