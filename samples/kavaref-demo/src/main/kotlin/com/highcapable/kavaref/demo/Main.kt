@@ -22,6 +22,7 @@
 package com.highcapable.kavaref.demo
 
 import com.highcapable.kavaref.KavaRef
+import com.highcapable.kavaref.KavaRef.Companion.asResolver
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.kavaref.demo.test.Test
 import com.highcapable.kavaref.runtime.KavaRefRuntime
@@ -43,7 +44,7 @@ fun main() {
             parameters(String::class)
         }.of(test).invoke("reflection test")
     // (2) Call from Object.
-    test.resolve()
+    test.asResolver()
         .firstMethod {
             name = "test"
             parameters(String::class)
@@ -56,7 +57,7 @@ fun main() {
             type = String::class
         }.of(test).set("Hello modified reflection test")
     // (2) Call from Object.
-    test.resolve()
+    test.asResolver()
         .firstField {
             name = "myTest"
             type = String::class
@@ -69,7 +70,7 @@ fun main() {
             emptyParameters()
         }.of(test).invoke<String>()
     // (2) Call from Object.
-    val testString2 = test.resolve()
+    val testString2 = test.asResolver()
         .firstMethod {
             name = "getTest"
             emptyParameters()
