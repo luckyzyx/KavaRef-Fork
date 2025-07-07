@@ -94,7 +94,7 @@ class VariousClass(vararg names: String) {
      * @return [Class] or null if no class is found.
      */
     @JvmOverloads
-    fun loadOrNull(loader: ClassLoader? = null, initialize: Boolean = false): Class<*>? {
+    fun loadOrNull(loader: ClassLoader? = null, initialize: Boolean = false): Class<Any>? {
         val currentLoader = loader
             ?: ClassLoaderProvider.classLoader
             ?: ClassLoader.getSystemClassLoader()

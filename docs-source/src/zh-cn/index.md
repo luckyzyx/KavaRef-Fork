@@ -31,8 +31,10 @@ public class World {
 ```
 
 ```kotlin
-World().resolve().firstMethod {
+val myWorld = World()
+
+World::class.resolve().firstMethod {
     name = "sayHello"
     parameters(String::class)
-}.invoke("KavaRef")
+}.of(myWorld).invoke("KavaRef")
 ```

@@ -45,7 +45,7 @@ MyClass::class.resolve().firstMethod {
     parameters(String::class)
 }.of(myClass).invoke("Hello, KavaRef!")
 // 直接引用实例方式
-myClass.resolve().firstMethod {
+myClass.asResolver().firstMethod {
     name = "myMethod"
     parameters(String::class)
 }.invoke("Hello, KavaRef!")
@@ -75,6 +75,8 @@ myClass.current().method {
 </div>
 
 `KavaRef` 在任何时候开始反射都需要使用 `resolve()` 来创建反射作用域，不再对 `Class` 等实例直接进行扩展相关 `method`、`constructor` 方法以避免污染其作用域。
+
+`KavaRef` 提供了 `asResolver()` 方法来直接引用实例对象的反射作用域，避免了 `YukiReflection` 中的 `current()` 方法创建不可控实例对象造成的污染。
 
 `KavaRef` 抛弃了 "Finder" 的设计理念，使用 "Filter" (过滤器) 的设计理念来获取反射结果，“查找” 不再是查找，而是 “过滤”。
 
@@ -146,8 +148,7 @@ MyClass::class.resolve()
 // 假设这就是你的 MyClass 实例
 val myClass: MyClass
 // 使用 KavaRef 调用并执行
-MyClass::class
-    .resolve()
+MyClass::class.resolve()
     .firstMethod {
         name = "myMethod"
         parameters(String::class)
@@ -196,8 +197,8 @@ MyClass::class
 - `Class.generic()`、`GenericClass` 功能
   - 如果只是希望获取超类的泛型参数，你可以使用 `Class.genericSuperclassTypeArguments()`，由于设计缺陷，不再提供
 
-- `Class.current()`、`CurrentClass` 功能
-  - 已合并到 `KavaRef.resolve()` 的核心功能中，不再单独提供
+- `Any.current()`、`CurrentClass` 功能
+  - 你可以使用 `Any.asResolver()` 来取代它
 
 - `Class.buildOf(...)` 功能
   - 你可以使用 `Class.createInstance(...)` 来取代它
@@ -218,8 +219,7 @@ MyClass::class
 // 假设这就是你的 MyClass 实例
 val myClass: MyClass
 // 使用 KavaRef 调用并执行
-MyClass::class
-    .resolve()
+MyClass::class.resolve()
     .optional() // 声明为可选，不要抛出异常
     // 使用 firstMethodOrNull 替代 firstMethod，因为找不到会抛出 Kotlin 自身的 NoSuchElementException
     .firstMethodOrNull {

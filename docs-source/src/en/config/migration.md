@@ -44,7 +44,7 @@ MyClass::class.resolve().firstMethod {
     parameters(String::class)
 }.of(myClass).invoke("Hello, KavaRef!")
 // Direct reference to instance.
-myClass.resolve().firstMethod {
+myClass.asResolver().firstMethod {
     name = "myMethod"
     parameters(String::class)
 }.invoke("Hello, KavaRef!")
@@ -75,6 +75,9 @@ myClass.current().method {
 
 `KavaRef` starts reflection at any time, you need to use `resolve()` to create a reflection scope.
 You no longer directly extend the related `method` and `constructor` methods to avoid contaminating their scope.
+
+`KavaRef` provides the `asResolver()` method to directly reference the reflection scope of the instance object,
+avoiding contamination caused by the creation of uncontrollable instance objects by the `current()` method in `YukiReflection`.
 
 `KavaRef` abandons the "Finder" design concept and uses the "Filter" design concept to obtain reflected results.
 "Find" is no longer a finding, but a "filtering".
@@ -161,8 +164,7 @@ corresponding type when `of(instance)` and `create(...)`, and type checking will
 // Assume that's your MyClass instance.
 val myClass: MyClass
 // Using KavaRef to call and execute.
-MyClass::class
-    .resolve()
+MyClass::class.resolve()
     .firstMethod {
         name = "myMethod"
         parameters(String::class)
@@ -180,7 +182,7 @@ MyClass::class
 The following functionality is provided in `YukiReflection` but is not implemented and no longer provided in `KavaRef`:
 
 - Preset reflection type constant classes, such as `StringClass`, `IntType`, etc
-  - You can use Kotlin class references such as `String::class`, `Int::class`, etc. to replace it.
+  - You can use Kotlin class references such as `String::class`, `Int::class`, etc. to instead it.
     For primitive types and wrapper classes, `IntType` is equivalent to `Int::class`, and `IntClass` is equivalent to `JInteger::class`
 
 - `DexClassFinder` function
@@ -204,7 +206,7 @@ The following functionality is provided in `YukiReflection` but is not implement
   - There is conceptual confusion in functional design and will no longer be provided
 
 - `"com.some.clazz".hasClass(loader)` function
-  - You can use `loader.hasClass("com.some.clazz")` to replace it
+  - You can use `loader.hasClass("com.some.clazz")` to instead it
 
 - `Class.hasField`, `Class.hasMethod`, `Class.hasConstructor` functions
   - Due to design defects, no longer provided
@@ -216,11 +218,11 @@ The following functionality is provided in `YukiReflection` but is not implement
   - If you just want to get generic parameters of the superclass, you can use `Class.genericSuperclassTypeArguments()`.
     Due to design defects, no longer provided
 
-- `Class.current()`, `CurrentClass` functions
-  - Merged into the core function of `KavaRef.resolve()` and is no longer provided separately
+- `Any.current()`, `CurrentClass` functions
+  - You can use `Any.asResolver()` to instead it
 
 - `Class.buildOf(...)` function
-  - You can use `Class.createInstance(...)` to replace it
+  - You can use `Class.createInstance(...)` to instead it
 
 - `Class.allMethods()`, `Class.allFields()`, `Class.allConstructors()` functions
   - Due to its pollution scope, no longer provided
@@ -240,8 +242,7 @@ When no valid members are filtered, `KavaRef` will throw an exception directly u
 // Assume that's your MyClass instance.
 val myClass: MyClass
 // Using KavaRef to call and execute.
-MyClass::class
-    .resolve()
+MyClass::class.resolve()
     .optional() // Declare as optional, do not throw exceptions.
     // Use firstMethodOrNull instead of firstMethod,
     // because the NoSuchElementException of Kotlin itself will be thrown.
