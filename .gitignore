@@ -3,6 +3,8 @@
 ## - https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
 ## - https://github.com/android/platform-samples/blob/main/.gitignore
 
+.idea
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml
