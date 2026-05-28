@@ -91,7 +91,7 @@ object MemberProcessor {
          * @param declaringClass the class to resolve methods from.
          * @return [List]<[Method]>
          */
-        open fun <T : Any> getDeclaredMethods(declaringClass: Class<T>): List<Method> = 
+        open fun <T : Any> getDeclaredMethods(declaringClass: Class<T>): List<Method> =
             runCatching { declaringClass.declaredMethods.toList() }.onFailure {
                 KavaRefRuntime.warn("Failed to get declared methods in $this because got an exception.", it)
             }.getOrNull() ?: emptyList()
@@ -334,26 +334,38 @@ object MemberProcessor {
         val conditionTable = buildConditionTable(condition, configuration)
         val message = when (condition) {
             is MethodCondition -> "No method found matching the condition for current class$superclassNote.\n" +
-                conditionTable + "\n" +
-                "Suggestion: $memberSuggestion"
+              conditionTable + "\n" +
+              "Suggestion: $memberSuggestion"
+
             is ConstructorCondition -> "No constructor found matching the condition for current class.\n" +
-                conditionTable + "\n" +
-                "Suggestion: Constructors are not inherited from superclass, check if the conditions are correct and valid, and try again. "
+              conditionTable + "\n" +
+              "Suggestion: Constructors are not inherited from superclass, check if the conditions are correct and valid, and try again. "
+
             is FieldCondition -> "No field found matching the condition for current class$superclassNote.\n" +
-                conditionTable + "\n" +
-                "Suggestion: $memberSuggestion"
+              conditionTable + "\n" +
+              "Suggestion: $memberSuggestion"
+
             else -> error("Unsupported condition type: $condition")
         }
 
-        return if (configuration.optional == MemberCondition.Configuration.Optional.NO) throw when (condition) {
-            is MethodCondition -> NoSuchMethodException("$message\n$exceptionNote\n$PRODUCT_DESCRIPTION")
-            is ConstructorCondition -> NoSuchMethodException("$message\n$exceptionNote\n$PRODUCT_DESCRIPTION")
-            is FieldCondition -> NoSuchFieldException("$message\n$exceptionNote\n$PRODUCT_DESCRIPTION")
-            else -> error("Unsupported condition type: $condition")
-        } else {
-            if (configuration.optional == MemberCondition.Configuration.Optional.NOTICE)
+        return when (configuration.optional) {
+            MemberCondition.Configuration.Optional.NO -> {
+                throw when (condition) {
+                    is MethodCondition -> NoSuchMethodException("$message\n$exceptionNote\n$PRODUCT_DESCRIPTION")
+                    is ConstructorCondition -> NoSuchMethodException("$message\n$exceptionNote\n$PRODUCT_DESCRIPTION")
+                    is FieldCondition -> NoSuchFieldException("$message\n$exceptionNote\n$PRODUCT_DESCRIPTION")
+                    else -> error("Unsupported condition type: $condition")
+                }
+            }
+
+            MemberCondition.Configuration.Optional.NOTICE -> {
                 KavaRefRuntime.warn(message.trim())
-            emptyList()
+                emptyList()
+            }
+
+            MemberCondition.Configuration.Optional.SILENT -> {
+                emptyList()
+            }
         }
     }
 
