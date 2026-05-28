@@ -10,24 +10,9 @@
 
 你可以使用如下方式将此模块添加到你的项目中。
 
-### SweetDependency (推荐)
+我们推荐你优先参考 [kavaref-bom](./kavaref-bom.md) 使用 BOM 统一管理版本。
 
-在你的项目 `SweetDependency` 配置文件中添加依赖。
-
-```yaml
-libraries:
-  com.highcapable.kavaref:
-    kavaref-extension:
-      version: +
-```
-
-在你的项目 `build.gradle.kts` 中配置依赖。
-
-```kotlin
-implementation(com.highcapable.kavaref.kavaref.extension)
-```
-
-### Version Catalog
+### Version Catalog (推荐)
 
 在你的项目 `gradle/libs.versions.toml` 中添加依赖。
 
@@ -131,7 +116,7 @@ val myClassOrNull = MyClass::class.createInstanceOrNull("Hello", 123)
 // createInstance 方法默认仅过滤公开的构造方法，如果你需要调用非公有构造方法，请设置 isPublic = false
 val myClassWithPrivateConstructor = MyClass::class.createInstance("Private!", isPublic = false)
 // 如果你想指定创建实例的类型使用另一个类型，可以使用以下方法
-val mySuperClass = MyClas::class.createInstanceAsType<MySuperClass>("Hello", 123)
+val mySuperClass = MyClass::class.createInstanceAsType<MySuperClass>("Hello", 123)
 // 同样地，你也可以使用带有 OrNull 后缀的方法在创建失败时返回 null 而不是抛出异常
 val mySuperClassOrNull = MyClass::class.createInstanceAsTypeOrNull<MySuperClass>("Hello", 123)
 ```
@@ -241,8 +226,8 @@ KavaRef 提供了一些扩展方法来简化对 `Member` 的操作。
 ```kotlin
 // 假设这个是你当前的 Member 对象
 val method: Method
-// 设置方法可访问
-method.makeAccessible()
+// 设置方法可访问，返回是否成功
+val isSuccess = method.makeAccessible()
 ```
 
 同样地，KavaRef 也对 `Modifier` 进行了扩展，你可以直接使用 `Member.isPublic` 等方法来判断一个 `Member` 的修饰符。
@@ -283,6 +268,37 @@ val parameterizedTypeOrNull = type.asParameterizedTypeOrNull()
 val myClass: Class<*>
 // 获取 myClass 的超类的泛型参数数组，获取失败或无法获取时将返回空数组
 val arguments = myClass.genericSuperclassTypeArguments()
+```
+
+### 类型引用扩展
+
+在 Java 中，方法的泛型会在编译后被类型擦除，在运行获取到的类型是 `java.lang.Object`。
+
+KavaRef 提供了 `TypeRef` 类来包装你的目标泛型来确保你可以在运行时获取到正确的泛型类型，它的核心功能参考于 [Gson](https://github.com/google/gson) 的 `TypeToken`。
+
+它的使用方法非常简单，你可以像下面这样使用它。
+
+> 示例如下
+
+```kotlin
+val listStringType = typeRef<List<String>>()
+// 获取存储的类型，将会是 List<? extends String>
+val type = listStringType.type
+// 获取其原始类型，将会是 List
+val rawType = listStringType.rawType
+```
+
+在使用 Gson 等需要传入 `Type` 的场景中，你可以为此实现一个带有 `reified` 泛型的扩展方法。
+
+> 示例如下
+
+```kotlin
+val gson = Gson()
+
+inline fun <reified T : Any> T.toJson(): String = gson.toJson(this, typeRef<T>().type)
+
+// 使用方法
+val json = listOf("KavaRef", "is", "awesome").toJson()
 ```
 
 ### Java 包装类扩展

@@ -18,25 +18,7 @@ project with integrated Kotlin environment dependencies.
 The dependencies of `KavaRef` are published in **Maven Central** and our public repository,
 you can use the following method to configure repositories.
 
-We recommend using Kotlin DSL as the Gradle build script language and [SweetDependency](https://github.com/HighCapable/SweetDependency)
-to manage dependencies.
-
-#### SweetDependency (Recommended)
-
-Configure repositories in your project's `SweetDependency` configuration file.
-
-```yaml
-repositories:
-  google:
-  maven-central:
-  # (Optional) You can add this URL to use our public repository
-  # When Sonatype-OSS fails and cannot publish dependencies, this repository is added as a backup
-  # For details, please visit: https://github.com/HighCapable/maven-repository
-  highcapable-maven-releases:
-    url: https://raw.githubusercontent.com/HighCapable/maven-repository/main/repository/releases
-```
-
-#### Traditional Method
+We recommend using Kotlin DSL as the Gradle build script language.
 
 Configure repositories in your project's `build.gradle.kts`.
 
@@ -57,7 +39,7 @@ Modify the Java version of Kotlin in your project's `build.gradle.kts` to 17 or 
 
 > Java Project
 
-```kt
+```kotlin
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
@@ -70,14 +52,17 @@ kotlin {
 
 > Android Project
 
-```kt
+```kotlin
 android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
+}
+
+tasks.withType<KotlinJvmCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 ```
@@ -88,6 +73,17 @@ The project is divided into multiple modules. You can choose the module you wish
 
 Click the corresponding module below to view detailed feature descriptions.
 
+::: tip Version Notes
+
+Starting from `1.0.3`, `KavaRef` started using unified versioning for releases.
+In most cases, you only need to pay attention to the same major version.
+You can also refer to the [kavaref-bom](../library/kavaref-bom.md) below to use BOM for unified dependency version management.
+
+For details, please see the [changelog](../about/changelog.md).
+
+:::
+
+- [kavaref-bom](../library/kavaref-bom.md)
 - [kavaref-core](../library/kavaref-core.md)
 - [kavaref-extension](../library/kavaref-extension.md)
 

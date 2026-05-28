@@ -16,25 +16,7 @@
 
 `KavaRef` 的依赖发布在 **Maven Central** 和我们的公共存储库中，你可以使用如下方式配置存储库。
 
-我们推荐使用 Kotlin DSL 作为 Gradle 构建脚本语言并推荐使用 [SweetDependency](https://github.com/HighCapable/SweetDependency) 来管理依赖。
-
-#### SweetDependency (推荐)
-
-在你的项目 `SweetDependency` 配置文件中配置存储库。
-
-```yaml
-repositories:
-  google:
-  maven-central:
-  # (可选) 你可以添加此 URL 以使用我们的公共存储库
-  # 当 Sonatype-OSS 发生故障无法发布依赖时，此存储库作为备选进行添加
-  # 详情请前往：https://github.com/HighCapable/maven-repository
-  highcapable-maven-releases:
-    # 中国大陆用户请将下方的 "raw.githubusercontent.com" 修改为 "raw.gitmirror.com"
-    url: https://raw.githubusercontent.com/HighCapable/maven-repository/main/repository/releases
-```
-
-#### 传统方式
+我们推荐使用 Kotlin DSL 作为 Gradle 构建脚本语言。
 
 在你的项目 `build.gradle.kts` 中配置存储库。
 
@@ -56,7 +38,7 @@ repositories {
 
 > Java 项目
 
-```kt
+```kotlin
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
@@ -69,14 +51,17 @@ kotlin {
 
 > Android 项目
 
-```kt
+```kotlin
 android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
+}
+
+tasks.withType<KotlinJvmCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 ```
@@ -87,6 +72,15 @@ android {
 
 你可以点击下方对应的模块前往查看详细的功能介绍。
 
+::: tip 版本说明
+
+从 `1.0.3` 起，`KavaRef` 开始采用统一版本进行发布，通常情况下你只需要关注同一个主版本即可，你也可以直接参考下方的 [kavaref-bom](../library/kavaref-bom.md) 使用 BOM 统一管理依赖版本。
+
+详情请见 [更新日志](../about/changelog.md)。
+
+:::
+
+- [kavaref-bom](../library/kavaref-bom.md)
 - [kavaref-core](../library/kavaref-core.md)
 - [kavaref-extension](../library/kavaref-extension.md)
 

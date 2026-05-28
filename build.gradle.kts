@@ -1,9 +1,35 @@
-import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.DokkaExtension
+import org.jetbrains.dokka.gradle.engine.plugins.DokkaHtmlPluginParameters
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
-    autowire(libs.plugins.kotlin.jvm) apply false
-    autowire(libs.plugins.kotlin.dokka) apply false
-    autowire(libs.plugins.maven.publish) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.kotlin.dokka) apply false
+    alias(libs.plugins.maven.publish) apply false
+}
+
+val dokkaPluginId = libs.plugins.kotlin.dokka.get().pluginId
+
+allprojects {
+    plugins.withId("java") {
+        configure<JavaPluginExtension> {
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
+            withSourcesJar()
+        }
+    }
+
+    tasks.withType<KotlinJvmCompile>().configureEach {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_17
+            freeCompilerArgs.addAll(
+                "-Xno-param-assertions",
+                "-Xno-call-assertions",
+                "-Xno-receiver-assertions"
+            )
+        }
+    }
 }
 
 libraryProjects {
@@ -26,37 +52,83 @@ libraryProjects {
         }
     }
 
-    tasks.withType<DokkaTask>().configureEach {
-        val configuration = """{ "footerMessage": "KavaRef | Apache-2.0 License | Copyright (C) 2019 HighCapable" }"""
-        pluginsMapConfiguration.set(mapOf("org.jetbrains.dokka.base.DokkaBase" to configuration))
-    }
+    plugins.withId(dokkaPluginId) {
+        configure<DokkaExtension> {
+            dokkaPublications.named("html") {
+                outputDirectory.set(layout.buildDirectory.dir("dokka/html"))
+            }
+            pluginsConfiguration.withType<DokkaHtmlPluginParameters>().configureEach {
+                footerMessage.set("KavaRef | Apache-2.0 License | Copyright (C) 2019 HighCapable")
+            }
+        }
 
-    tasks.register("publishKDoc") {
-        group = "documentation"
-        dependsOn("dokkaHtml")
+        tasks.register("publishKDoc") {
+            group = "documentation"
+            dependsOn("dokkaGeneratePublicationHtml")
 
-        doLast {
-            val docsDir = rootProject.projectDir
-                .resolve("docs-source")
-                .resolve("dist")
-                .resolve("KDoc")
-                .resolve(project.name)
+            doLast {
+                val docsDir = rootProject.projectDir
+                    .resolve("docs-source")
+                    .resolve("dist")
+                    .resolve("KDoc")
+                    .resolve(project.name)
 
-            if (docsDir.exists()) docsDir.deleteRecursively() else docsDir.mkdirs()
-            layout.buildDirectory.dir("dokka/html").get().asFile.copyRecursively(docsDir)
+                if (docsDir.exists()) docsDir.deleteRecursively() else docsDir.mkdirs()
+                layout.buildDirectory.dir("dokka/html").get().asFile.copyRecursively(docsDir)
+            }
         }
     }
 }
 
+registerAggregatePublishTask(
+    name = "publishBomToMavenLocal",
+    description = "Publishes the BOM and all modules to the local Maven cache.",
+    taskName = "publishToMavenLocal",
+    projectNames = Libraries.entries
+)
+
+registerAggregatePublishTask(
+    name = "publishBomToMavenCentral",
+    description = "Publishes the BOM and all modules to the Maven Central repository.",
+    taskName = "publishMavenPublicationToMavenCentralRepository",
+    projectNames = Libraries.entries
+)
+
+registerAggregatePublishTask(
+    name = "publishBomToHighCapableMavenReleases",
+    description = "Publishes the BOM and all modules to the HighCapableMavenReleases repository.",
+    taskName = "publishAllPublicationsToHighCapableMavenReleasesRepository",
+    projectNames = Libraries.entries
+)
+
+registerAggregatePublishTask(
+    name = "publishBomToHighCapableMavenSnapShots",
+    description = "Publishes the BOM and all modules to the HighCapableMavenSnapShots repository.",
+    taskName = "publishAllPublicationsToHighCapableMavenSnapShotsRepository",
+    projectNames = Libraries.entries
+)
+
+fun registerAggregatePublishTask(name: String, description: String, taskName: String, projectNames: List<String>) {
+    tasks.register(name) {
+        this.group = "publishing"
+        this.description = description
+        dependsOn(projectNames.map { ":$it:$taskName" })
+    }
+}
+
 fun libraryProjects(action: Action<in Project>) {
-    val libraries = listOf(
-        Libraries.KAVAREF_CORE,
-        Libraries.KAVAREF_EXTENSION
-    )
+    val libraries = Libraries.entries
     allprojects { if (libraries.contains(name)) action.execute(this) }
 }
 
 object Libraries {
+    const val KAVAREF_BOM = "kavaref-bom"
     const val KAVAREF_CORE = "kavaref-core"
     const val KAVAREF_EXTENSION = "kavaref-extension"
+
+    val entries = listOf(
+        KAVAREF_BOM,
+        KAVAREF_CORE,
+        KAVAREF_EXTENSION
+    )
 }

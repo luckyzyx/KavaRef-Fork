@@ -29,15 +29,34 @@ import java.lang.reflect.Member
 import java.lang.reflect.Modifier
 
 /**
+ * A flag to indicate whether the [AccessibleObject.trySetAccessible] method
+ * is supported in the current environment.
+ */
+@Volatile
+private var isTrySetAccessibleSupported = true
+
+/**
  * Make [AccessibleObject] implements [Member] accessible.
  * @receiver the [Member] to be made accessible.
+ * @return [Boolean]
  */
-inline fun <reified T : Member> T.makeAccessible() {
-    (this as? AccessibleObject)?.let {
+fun Member.makeAccessible() = (this as? AccessibleObject?)?.let {
+    fun doAccessible() = runCatching {
         @Suppress("DEPRECATION")
         if (!it.isAccessible) it.isAccessible = true
+
+        true
+    }.getOrDefault(false)
+
+    if (!isTrySetAccessibleSupported) return@let doAccessible()
+
+    runCatching {
+        it.trySetAccessible()
+    }.getOrElse { _ ->
+        isTrySetAccessibleSupported = false
+        doAccessible()
     }
-}
+} == true
 
 // Member extension properties for checking modifiers.
 

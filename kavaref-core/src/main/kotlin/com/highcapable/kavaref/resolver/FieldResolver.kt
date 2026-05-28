@@ -23,7 +23,6 @@
 
 package com.highcapable.kavaref.resolver
 
-import com.highcapable.kavaref.extension.makeAccessible
 import com.highcapable.kavaref.resolver.base.InstanceAwareResolver
 import java.lang.reflect.Field
 
@@ -47,7 +46,7 @@ class FieldResolver<T : Any> internal constructor(override val self: Field) : In
      */
     @JvmName("getTyped")
     fun <T : Any?> get(): T? {
-        self.makeAccessible()
+        requireAccessible()
         return self.get(instance) as? T?
     }
 
@@ -67,7 +66,7 @@ class FieldResolver<T : Any> internal constructor(override val self: Field) : In
      * @return [Any] or null.
      */
     fun get(): Any? {
-        self.makeAccessible()
+        requireAccessible()
         return self.get(instance)
     }
 
@@ -86,7 +85,7 @@ class FieldResolver<T : Any> internal constructor(override val self: Field) : In
      * @param value the value to set.
      */
     fun set(value: Any?) {
-        self.makeAccessible()
+        requireAccessible()
         self.set(instance, value)
     }
 

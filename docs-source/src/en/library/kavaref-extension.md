@@ -10,24 +10,9 @@ This is an extended dependency for KavaRef-related features.
 
 You can add this module to your project using the following method.
 
-### SweetDependency (Recommended)
+We recommend that you first refer to [kavaref-bom](./kavaref-bom.md) to use BOM for unified version management.
 
-Add dependency in your project's `SweetDependency` configuration file.
-
-```yaml
-libraries:
-  com.highcapable.kavaref:
-    kavaref-extension:
-      version: +
-```
-
-Configure dependency in your project's `build.gradle.kts`.
-
-```kotlin
-implementation(com.highcapable.kavaref.kavaref.extension)
-```
-
-### Version Catalog
+### Version Catalog (Recommended)
 
 Add dependency in your project's `gradle/libs.versions.toml`.
 
@@ -61,12 +46,11 @@ Please change `<version>` to the version displayed at the top of this document.
 
 You can view the KDoc [click here](kdoc://kavaref-extension).
 
-### Class Extensions
+### Class Extension
 
-KavaRef provides some extensions that are more convenient when dealing with `Class` objects.
+KavaRef provides convenient extensions when dealing with `Class` objects.
 
-KavaRef also adds `KClass` extensions to the `Class` extensions,
-which is used to call `KClass.java`, making it more concise than using `Some::class.java` directly.
+KavaRef also brings these extensions to `KClass`, allowing you to call `KClass.java` more concisely than using `Some::class.java` directly.
 
 #### Create Class Object
 
@@ -118,7 +102,7 @@ You can also use the `hasSuperclass` and `hasInterfaces` methods to determine wh
 ::: danger
 
 The `Class` passed in by the `classOf` method will perform unboxing of Java wrapper classes by default,
-whether you pass in something like `kotlin.Boolean` or `java.lang.Boolean` (see [Java Wrapper Classes Extensions](#java-wrapper-classes-extensions) below),
+whether you pass in something like `kotlin.Boolean` or `java.lang.Boolean` (see [Java Wrapper Classes Extension](#java-wrapper-classes-extension) below),
 If you need to avoid the incoming `Class` being unboxed into primitive types, you need to explicitly set the `primitiveType = false` parameter.
 
 :::
@@ -206,7 +190,7 @@ myClassOrNull?.resolve()
 otherClassOrNull?.resolve()
 ```
 
-#### ClassLoader Extensions
+#### ClassLoader Extension
 
 KavaRef also provides some practical extension methods for `ClassLoader`.
 
@@ -221,7 +205,7 @@ val myClassOrNull = classLoader.loadClassOrNull("com.example.MyClass")
 val isClassExists = classLoader.hasClass("com.example.MyClass")
 ```
 
-### Array Class Extensions
+### Array Class Extension
 
 In Java, the `Class` object of an array is a special `Class` object, and usually we create it as follows.
 
@@ -243,7 +227,7 @@ Now, the `Class` object that creates `java.lang.String[]` can be written like th
 val arrayClass = ArrayClass(String::class)
 ```
 
-### Member Extensions
+### Member Extension
 
 KavaRef provides some extension methods to simplify operations on `Member`.
 
@@ -256,13 +240,13 @@ It will take effect if `Member` is the `AccessibleObject` type.
 ```kotlin
 // Suppose this is your current Member object.
 val method: Method
-// Make method is accessible.
-method.makeAccessible()
+// Make method is accessible, return whether it is successful.
+val isSuccess = method.makeAccessible()
 ```
 
 Similarly, KavaRef also extends `Modifier`, and you can directly use `Member.isPublic` and other methods to judge a `Member` modifier.
 
-### Type Extensions
+### Type Extension
 
 When manipulating types or generic types in Java, you usually need to use the `Type` interface and its subinterface to handle it.
 
@@ -304,7 +288,39 @@ val myClass: Class<*>
 val arguments = myClass.genericSuperclassTypeArguments()
 ```
 
-### Java Wrapper Classes Extensions
+### Type Reference Extension
+
+In Java, method generics are erased after compilation, and the type obtained at runtime is `java.lang.Object`.
+
+KavaRef provides the `TypeRef` class to wrap your target generics to ensure that you can get the correct generic type at runtime.
+Its core functionality is referenced from [Gson](https://github.com/google/gson)'s `TypeToken`.
+
+It is very simple to use, you can use it like this.
+
+> The following example
+
+```kotlin
+val listStringType = typeRef<List<String>>()
+// Get the stored type, which will be List<? extends String>.
+val type = listStringType.type
+// Get its raw type, which will be List.
+val rawType = listStringType.rawType
+```
+
+In scenarios where you need to pass in `Type` such as when using Gson, you can implement an extension method with `reified` generics for this purpose.
+
+> The following example
+
+```kotlin
+val gson = Gson()
+
+inline fun <reified T : Any> T.toJson(): String = gson.toJson(this, typeRef<T>().type)
+
+// Usage
+val json = listOf("KavaRef", "is", "awesome").toJson()
+```
+
+### Java Wrapper Classes Extension
 
 In Kotlin, you can directly use `Boolean::class`, `Byte::class`, etc. to obtain Java's original types `boolean` and `byte` instead of their wrapper classes.
 
