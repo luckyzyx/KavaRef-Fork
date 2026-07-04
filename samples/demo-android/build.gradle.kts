@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.hikage)
 }
 
 android {
@@ -22,7 +23,6 @@ android {
     }
     buildFeatures {
         buildConfig = true
-        viewBinding = true
     }
 }
 
@@ -36,6 +36,14 @@ dependencies {
     implementation(libs.betterandroid.ui.component.adapter)
     implementation(libs.betterandroid.ui.extension)
     implementation(libs.betterandroid.system.extension)
+
+    implementation(platform(libs.hikage.bom))
+    implementation(libs.hikage.core)
+    implementation(libs.hikage.runtime)
+    implementation(libs.hikage.runtime.attribute)
+    implementation(libs.hikage.extension)
+    implementation(libs.hikage.widget.androidx)
+    implementation(libs.hikage.widget.material)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
