@@ -8,7 +8,7 @@
 
 :::
 
-### 1.1.0 | 2026.06.06 &ensp;<Badge type="tip" text="最新" vertical="middle" />
+### 1.1.0 | 2026.06.06 &ensp;<Badge type="latest" text="最新" vertical="middle" />
 
 #### kavaref-core
 

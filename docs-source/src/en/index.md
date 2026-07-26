@@ -1,22 +1,29 @@
 ---
-home: true
+layout: home
 title: Home
-heroImage: /images/logo.svg
-actions:
-  - text: Get Started
-    link: /en/guide/home
-    type: primary
-  - text: Changelog
-    link: /en/about/changelog
-    type: secondary
+hero:
+  name: KavaRef
+  tagline: A modernizing Java Reflection with Kotlin
+  image:
+    src: /images/logo.svg
+    alt: KavaRef
+  actions:
+    - text: Get Started
+      link: /en/guide/home
+      theme: brand
+    - text: Changelog
+      link: /en/about/changelog
+      theme: alt
 features:
-  - title: Light and Elegant
+  - icon: 🪶
+    title: Light and Elegant
     details: A powerful, elegant, beautiful API built with Kotlin lambda can help you quickly implement bytecode filtering and reflection functions.
-  - title: Fully Compatible
+  - icon: 🔄
+    title: Fully Compatible
     details: Using native Java APIs to implement reflection functionality, it can be used on any Kotlin on JVM project, and it is no problem on Android.
-  - title: Quick to Start
+  - icon: ⚡
+    title: Quick to Start
     details: Simple and easy to use right now! No complex configuration or extensive development experience required. Just integrate the dependencies and enjoy!
-footer: Apache-2.0 License | Copyright (C) 2019 HighCapable
 ---
 
 ### Start reflecting anytime, anywhere.
