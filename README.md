@@ -27,8 +27,8 @@ implemented using Kotlin.
 It was firstborn in the [YukiHookAPI](https://github.com/HighCapable/YukiHookAPI), and was later decoupled into
 the [YukiReflection](https://github.com/HighCapable/YukiReflection) project.
 
-As you can see, `KavaRef` is an entirely new API set refactored around the design principles of `YukiReflection`. It carries no affiliation and has
-officially replaced `YukiReflection` as the new reflection solution.
+As you can see, KavaRef is an entirely new API set refactored around the design principles of YukiReflection. It carries no affiliation and has
+officially replaced YukiReflection as the new reflection solution.
 
 ## Features Overview
 
@@ -43,7 +43,7 @@ public class World {
 }
 ```
 
-> Calling with `KavaRef`
+> Calling with KavaRef
 
 ```kotlin
 val myWorld = World()
@@ -64,7 +64,7 @@ You can go to the documentation page for more detailed tutorials and content.
 ### What's next?
 
 1. **Add dependencies**: Add `kavaref-core` and the corresponding platform modules to your project.
-2. **Sync the project**: After a Gradle sync, you can start using `KavaRef`.
+2. **Sync the project**: After a Gradle sync, you can start using KavaRef.
 
 In the opened page, select the **Quick Start** section in the sidebar to continue reading.
 

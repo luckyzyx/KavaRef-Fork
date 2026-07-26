@@ -25,7 +25,7 @@
 它最早诞生于 [YukiHookAPI](https://github.com/HighCapable/YukiHookAPI)，后期被解耦合为 [YukiReflection](https://github.com/HighCapable/YukiReflection)
 项目。
 
-如你所见，现在 `KavaRef` 是借助 `YukiReflection` 的设计思想完全重构的一套全新 API，它们没有从属关系，并取代 `YukiReflection` 成为一个全新的反射解决方案。
+如你所见，现在 KavaRef 是借助 YukiReflection 的设计思想完全重构的一套全新 API，它们没有从属关系，并取代 YukiReflection 成为一个全新的反射解决方案。
 
 ## 功能一览
 
@@ -40,7 +40,7 @@ public class World {
 }
 ```
 
-> 使用 `KavaRef` 调用
+> 使用 KavaRef 调用
 
 ```kotlin
 val myWorld = World()
@@ -61,7 +61,7 @@ World::class.resolve().firstMethod {
 ### 下一步做什么？
 
 1. **引入依赖**: 将 `kavaref-core` 和对应平台的模块添加到你的项目中。
-2. **同步项目**: 在 Gradle 同步后，你就可以开始使用 `KavaRef` 了。
+2. **同步项目**: 在 Gradle 同步后，你就可以开始使用 KavaRef 了。
 
 在打开的页面中，选择侧边栏的 **快速开始** 章节以继续阅读。
 
