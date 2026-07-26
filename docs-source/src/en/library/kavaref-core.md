@@ -45,7 +45,7 @@ Please change `<version>` to the version displayed at the top of this document.
 ::: danger
 
 Since `1.1.0`, in order to be compatible with the differences in binary files distributed for each platform,
-`KavaRef` introduced a new base module. When updating to this version,
+KavaRef introduced a new base module. When updating to this version,
 you must choose a platform-related base module as a dependency, otherwise it will cause a `NoClassDefFoundError` exception.
 
 For the Android platform, please choose [kavaref-android](kavaref-android.md), and for the JVM platform, please choose [kavaref-jvm](kavaref-jvm.md).

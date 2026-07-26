@@ -19,7 +19,7 @@
 
 #### kavaref-android
 
-- 新增 Android 平台底座模块，支持 Min SDK 21 环境下使用 `KavaRef`
+- 新增 Android 平台底座模块，支持 Min SDK 21 环境下使用 KavaRef
 - 新增 Android Lint 规则
 - 新增 R8/ProGuard 配置与 Android 平台日志实现
 
@@ -58,7 +58,7 @@
 #### 1.0.1 | 2025.07.06 &ensp;<Badge type="warning" text="过旧" vertical="middle" />
 
 - `T.resolve()` 已被弃用，因为其存在命名空间污染问题，现在推荐迁移到 `T.asResolver()`
-- 移除了 `KavaRef` 中存在的残留 `block` 方法，如果有用到此类方法，你可以手动使用 `apply` 来实现
+- 移除了 KavaRef 中存在的残留 `block` 方法，如果有用到此类方法，你可以手动使用 `apply` 来实现
 
 #### 1.0.0 | 2025.06.25 &ensp;<Badge type="warning" text="过旧" vertical="middle" />
 

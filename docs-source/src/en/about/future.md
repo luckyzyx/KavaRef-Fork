@@ -8,7 +8,7 @@
 
 ### Support Class Filtering through ClassLoader
 
-`KavaRef` currently only supports search and calls for reflection APIs such as `Method`, `Field`, and `Constructor`.
+KavaRef currently only supports search and calls for reflection APIs such as `Method`, `Field`, and `Constructor`.
 In the future, the ability to filter `Class` by specified `ClassLoader` type may be supported on Java and Android platforms according to requirements.
 
 Currently, you can use [DexKit](https://github.com/LuckyPray/DexKit) to fulfill this requirement,
@@ -16,7 +16,7 @@ which also supports more complex searches and calls for reflective APIs such as 
 
 ### Automatically Generate Reflection Code
 
-**This is a feature that was initially established in [YukiReflection](https://github.com/HighCapable/YukiReflection), and `KavaRef` is ready to continue implementing it at some point in the future.**
+**This is a feature that was initially established in [YukiReflection](https://github.com/HighCapable/YukiReflection), and KavaRef is ready to continue implementing it at some point in the future.**
 
 Use `stub` to create a Kotlin class, and declare the parameters in it, as well as its different states in each version.
 

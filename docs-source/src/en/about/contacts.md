@@ -11,6 +11,6 @@ Find me on **Twitter** [@fankesyooni](https://twitter.com/fankesyooni).
 
 ## Help with Maintenance
 
-Thank you for choosing and using `KavaRef`.
+Thank you for choosing and using KavaRef.
 
 If you have code-related suggestions and requests, you can submit a Pull Request on GitHub.

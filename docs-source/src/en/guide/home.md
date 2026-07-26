@@ -13,13 +13,13 @@ implemented using Kotlin.
 It was first born in the [YukiHookAPI](https://github.com/HighCapable/YukiHookAPI), and was later decoupled into
 the [YukiReflection](https://github.com/HighCapable/YukiReflection) project.
 
-As you can see, `KavaRef` is an entirely new API set refactored around the design principles of `YukiReflection`. It carries no affiliation and has officially replaced `YukiReflection` as the new reflection solution.
+As you can see, KavaRef is an entirely new API set refactored around the design principles of YukiReflection. It carries no affiliation and has officially replaced YukiReflection as the new reflection solution.
 
-If you are using `YukiReflection` or the `YukiHookAPI` project related to it, you can refer to [here](../config/migration) to migrate the reflection API to `KavaRef`.
+If you are using YukiReflection or the YukiHookAPI project related to it, you can refer to [here](../config/migration) to migrate the reflection API to KavaRef.
 
 ## Usage
 
-`KavaRef` is built with Kotlin **lambda** syntax in a Java Builder style.
+KavaRef is built with Kotlin **lambda** syntax in a Java Builder style.
 
 It can replace [Java's native Reflection API](https://www.oracle.com/technical-resources/articles/java/javareflection.html) and implement a more complete reflection solution with a more human-friendly language.
 
@@ -30,10 +30,10 @@ You should be proficient with Java's native reflection APIs, understand Java's c
 ## Language Requirement
 
 It is recommended to use Kotlin. API composition also supports Java,
-but in pure Java projects, `KavaRef` may not be able to demonstrate its full functionality and syntactic sugar advantages.
+but in pure Java projects, KavaRef may not be able to demonstrate its full functionality and syntactic sugar advantages.
 
 All the demo sample code in the documentation will be described using Kotlin first.
-If you don't know how to use Kotlin at all, you may not be able to fully experience and use the functionality of `KavaRef`.
+If you don't know how to use Kotlin at all, you may not be able to fully experience and use the functionality of KavaRef.
 
 ## Contribution
 

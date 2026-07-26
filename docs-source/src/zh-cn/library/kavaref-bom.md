@@ -4,7 +4,7 @@
 <span style="margin-left: 5px"/>
 ![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fraw.githubusercontent.com%2FHighCapable%2Fmaven-repository%2Frefs%2Fheads%2Fmain%2Frepository%2Freleases%2Fcom%2Fhighcapable%2Fkavaref%2Fkavaref-bom%2Fmaven-metadata.xml&logo=apachemaven&logoColor=orange&label=highcapable-maven-releases&style=flat-square)
 
-这是针对 `KavaRef` 相关模块统一版本管理的 BOM 依赖。
+这是针对 KavaRef 相关模块统一版本管理的 BOM 依赖。
 
 ## 配置依赖
 
@@ -62,7 +62,7 @@ implementation("com.highcapable.kavaref:kavaref-extension")
 
 ## 功能介绍
 
-`kavaref-bom` 本身不包含实际代码，它仅作为 `KavaRef` 相关模块的 BOM 用于统一管理依赖版本。
+`kavaref-bom` 本身不包含实际代码，它仅作为 KavaRef 相关模块的 BOM 用于统一管理依赖版本。
 
 目前它会管理以下模块的版本：
 

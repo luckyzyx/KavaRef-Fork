@@ -44,7 +44,7 @@ implementation("com.highcapable.kavaref:kavaref-core:<version>")
 
 ::: danger
 
-从 `1.1.0` 起，为了兼容每个平台分发的二进制文件差异，`KavaRef` 引入了全新的底座模块，更新到这个版本时，你必须选择一个平台相关的底座模块作为依赖引入，否则会引发 `NoClassDefFoundError` 异常。
+从 `1.1.0` 起，为了兼容每个平台分发的二进制文件差异，KavaRef 引入了全新的底座模块，更新到这个版本时，你必须选择一个平台相关的底座模块作为依赖引入，否则会引发 `NoClassDefFoundError` 异常。
 
 Android 平台请选择 [kavaref-android](kavaref-android.md)，JVM 平台请选择 [kavaref-jvm](kavaref-jvm.md)。
 

@@ -4,7 +4,7 @@
 <span style="margin-left: 5px"/>
 ![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fraw.githubusercontent.com%2FHighCapable%2Fmaven-repository%2Frefs%2Fheads%2Fmain%2Frepository%2Freleases%2Fcom%2Fhighcapable%2Fkavaref%2Fkavaref-bom%2Fmaven-metadata.xml&logo=apachemaven&logoColor=orange&label=highcapable-maven-releases&style=flat-square)
 
-This is the BOM dependency for unified version management of `KavaRef` related modules.
+This is the BOM dependency for unified version management of KavaRef related modules.
 
 ## Configure Dependency
 
@@ -62,7 +62,7 @@ Please change `<version>` to the version displayed at the top of this document.
 
 ## Function Introduction
 
-`kavaref-bom` does not contain actual code itself. It only serves as the BOM of `KavaRef` related modules for unified dependency version management.
+`kavaref-bom` does not contain actual code itself. It only serves as the BOM of KavaRef related modules for unified dependency version management.
 
 It currently manages the versions of the following modules:
 

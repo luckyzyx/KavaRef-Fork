@@ -1,17 +1,17 @@
 # Migration to KavaRef
 
-If you are used to using the reflection API in [YukiReflection](https://github.com/HighCapable/YukiReflection) or [YukiHookAPI](https://github.com/HighCapable/YukiHookAPI), you can refer to the following to migrate to `KavaRef`.
+If you are used to using the reflection API in [YukiReflection](https://github.com/HighCapable/YukiReflection) or [YukiHookAPI](https://github.com/HighCapable/YukiHookAPI), you can refer to the following to migrate to KavaRef.
 
 ::: warning
 
-For `YukiHookAPI`, you need to continue using its Hook API, and `KavaRef` only includes Java reflection-related APIs.
+For YukiHookAPI, you need to continue using its Hook API, and KavaRef only includes Java reflection-related APIs.
 
 :::
 
 ## Basic Functions
 
-The design concept of `KavaRef` is similar to `YukiReflection`, but not exactly the same.
-The following lists the differences between `YukiReflection` and `KavaRef` in basic reflection functions, which you can manually migrate based on.
+The design concept of KavaRef is similar to YukiReflection, but not exactly the same.
+The following lists the differences between YukiReflection and KavaRef in basic reflection functions, which you can manually migrate based on.
 
 For example, we have the following Java class.
 
@@ -26,7 +26,7 @@ public class MyClass {
 }
 ```
 
-Here is a comparison of `KavaRef` with `YukiReflection` using examples.
+Here is a comparison of KavaRef with YukiReflection using examples.
 
 > The following example
 
@@ -73,40 +73,40 @@ myClass.current().method {
 </div>
 </div>
 
-`KavaRef` starts reflection at any time; you need to use `resolve()` to create a reflection scope.
+KavaRef starts reflection at any time; you need to use `resolve()` to create a reflection scope.
 You no longer directly extend the related `method` and `constructor` methods to avoid polluting their scope.
 
-`KavaRef` provides the `asResolver()` method to directly reference the reflection scope of the instance object,
-avoiding pollution caused by the creation of uncontrollable instance objects by the `current()` method in `YukiReflection`.
+KavaRef provides the `asResolver()` method to directly reference the reflection scope of the instance object,
+avoiding pollution caused by the creation of uncontrollable instance objects by the `current()` method in YukiReflection.
 
-`KavaRef` abandons the "Finder" design concept and uses the "Filter" design concept to obtain reflection results.
+KavaRef abandons the "Finder" design concept and uses the "Filter" design concept to obtain reflection results.
 "Find" is no longer finding, but "filtering".
 
-`KavaRef` canceled the design scheme defined in `YukiReflection` for determining whether the `Member` obtained in the resulting instance is multiple or single,
+KavaRef canceled the design scheme defined in YukiReflection for determining whether the `Member` obtained in the resulting instance is multiple or single,
 and directly returns the entire `List<MemberResolver>`.
 The example you see above uses `firstMethod` to get the first matching `MethodResolver`.
 If you need to get all matches, you can change to `method`.
 
-The conditional method name in `MethodCondition` of `KavaRef` has been modified from abbreviations
-such as `param` used previously in `YukiReflection` to `parameters` to better align with the naming conventions of the Java reflection API.
+The conditional method name in `MethodCondition` of KavaRef has been modified from abbreviations
+such as `param` used previously in YukiReflection to `parameters` to better align with the naming conventions of the Java reflection API.
 
-`KavaRef` no longer provides the `param(...).order()` function in conditions, because this function itself is unstable.
-`KavaRef` now uses an iterator for filtering, and the bytecode will no longer be in order, nor should bytecode be filtered by order.
+KavaRef no longer provides the `param(...).order()` function in conditions, because this function itself is unstable.
+KavaRef now uses an iterator for filtering, and the bytecode will no longer be in order, nor should bytecode be filtered by order.
 You can use `firstMethod`, `firstField`, or `lastMethod`, `lastField`, etc. to get the first or last matching result.
 
-`KavaRef` renames the `get(instance)` method to `of(instance)` because `get(...)` may be confused with the `get(...)` usage of `Field` and lacks semantic clarity.
+KavaRef renames the `get(instance)` method to `of(instance)` because `get(...)` may be confused with the `get(...)` usage of `Field` and lacks semantic clarity.
 At the same time, `get(instance)` no longer gets the `MethodFinder.Result.Instance` instance from something like `MethodFinder.Result`,
 but uses `of(instance)` to consistently operate and set the instance object to `MemberResolver`.
 
-Methods such as `string()`, `int()`, etc. in `MethodFinder.Result.Instance` have been removed in `KavaRef`.
+Methods such as `string()`, `int()`, etc. in `MethodFinder.Result.Instance` have been removed in KavaRef.
 You can directly use `get<String>()`, `get<Int>()`, `invoke<String>(...)`, `invoke<Int>(...)`, etc. to get or call the corresponding type results.
 
 ::: danger
 
-If you are looking for (filtering) `Field`, you need to note that there may be semantic conflicts between `KavaRef` and `YukiReflection` in the acquisition method of `Field`.
+If you are looking for (filtering) `Field`, you need to note that there may be semantic conflicts between KavaRef and YukiReflection in the acquisition method of `Field`.
 Please pay special attention when migrating this part.
 
-For example, get the static field of `content` in `MyClass`, in `YukiReflection`, you would do this.
+For example, get the static field of `content` in `MyClass`, in YukiReflection, you would do this.
 
 > The following example
 
@@ -117,7 +117,7 @@ MyClass::class.java
     .string() // value
 ```
 
-In `KavaRef` you need to do this.
+In KavaRef you need to do this.
 
 > The following example
 
@@ -128,11 +128,11 @@ MyClass::class.resolve()
 ```
 
 As mentioned above, `get(...)` is used to get the `FieldFinder.Result.Instance` object in Y`ukiReflection`, not the value.
-To get the value and process it as a specified type, you need to call `string()` or `cast<String>()`, and in `KavaRef`,
+To get the value and process it as a specified type, you need to call `string()` or `cast<String>()`, and in KavaRef,
 you use `get<T>()` directly in `MemberResolver` to get the value of the specified type.
-The usage of `get(...)` of `KavaRef` for `get(...)` to `of(...)`.
+The usage of `get(...)` of KavaRef for `get(...)` to `of(...)`.
 
-So the complete writing of the above example in `KavaRef` should be.
+So the complete writing of the above example in KavaRef should be.
 
 > The following example
 
@@ -146,15 +146,15 @@ MyClass::class.resolve()
 
 :::
 
-`KavaRef` no longer provides `call` methods for `Method`, and is now merged uniformly into `invoke` (with generic parameters).
-At the same time, `KavaRef` defines the `newInstance` method of `Constructor` as `create` (with generic parameters).
+KavaRef no longer provides `call` methods for `Method`, and is now merged uniformly into `invoke` (with generic parameters).
+At the same time, KavaRef defines the `newInstance` method of `Constructor` as `create` (with generic parameters).
 
 You may have noticed that the condition `superClass()` is gone, it is still there,
-in `KavaRef` it has been renamed to `superclass()`, docking with the standard Java reflection API.
+in KavaRef it has been renamed to `superclass()`, docking with the standard Java reflection API.
 
-At the same time, `KavaRef` extends `KClass`, and you no longer need to use `Some::class.java` to declare an instance of `Class` in most scenarios.
+At the same time, KavaRef extends `KClass`, and you no longer need to use `Some::class.java` to declare an instance of `Class` in most scenarios.
 
-Another design idea of ​​`KavaRef` is type safety.
+Another design idea of ​​KavaRef is type safety.
 As long as you use `KClass<T>` and `Class<T>` that declare the generic type, it will be checked and converted to the
 corresponding type when `of(instance)` and `create(...)`, and type checking will be completed during coding to avoid runtime errors.
 
@@ -176,10 +176,10 @@ MyClass::class.resolve()
 
 ## Other Functions
 
-`KavaRef` and `YukiReflection` are not much different in other functions and extended functions.
-`KavaRef` separates these functions into a separate module.
+KavaRef and YukiReflection are not much different in other functions and extended functions.
+KavaRef separates these functions into a separate module.
 
-The following functionality is provided in `YukiReflection` but is not implemented and no longer provided in `KavaRef`:
+The following functionality is provided in YukiReflection but is not implemented and no longer provided in KavaRef:
 
 - Preset reflection type constant classes, such as `StringClass`, `IntType`, etc
   - You can use Kotlin class references such as `String::class`, `Int::class`, etc. to instead it.
@@ -228,13 +228,13 @@ The following functionality is provided in `YukiReflection` but is not implement
   - Due to its pollution scope, no longer provided
 
 - `YLog` log function
-  - `KavaRef` no longer takes over the logs, you can use the corresponding platform implementation method and no longer provided
+  - KavaRef no longer takes over the logs, you can use the corresponding platform implementation method and no longer provided
 
 ## Exception Handling
 
-`KavaRef` is completely different from `YukiReflection` in exception handling.
-The exception logic of `KavaRef` will remain transparent by default. <u>**It no longer actively intercepts exceptions and prints error logs or even provides `onNoSuchMethod` listener**</u>.
-When no valid members are filtered, `KavaRef` will throw an exception directly unless you **explicitly declare the condition as optional (consistent with `YukiReflection` logic)**.
+KavaRef is completely different from YukiReflection in exception handling.
+The exception logic of KavaRef will remain transparent by default. <u>**It no longer actively intercepts exceptions and prints error logs or even provides `onNoSuchMethod` listener**</u>.
+When no valid members are filtered, KavaRef will throw an exception directly unless you **explicitly declare the condition as optional (consistent with YukiReflection logic)**.
 
 > The following example
 
@@ -256,12 +256,12 @@ For more information, please refer to the [Exception Handling](../library/kavare
 
 ## New to KavaRef
 
-If you haven't used `YukiReflection` or `YukiHookAPI`, it doesn't matter, you can refer to the following content to get started quickly.
+If you haven't used YukiReflection or YukiHookAPI, it doesn't matter, you can refer to the following content to get started quickly.
 
 ::: tip What to Do Next
 
 For more information, please continue reading [kavaref-core](../library/kavaref-core.md) and [kavaref-extension](../library/kavaref-extension.md).
 
-Get started using `KavaRef` now!
+Get started using KavaRef now!
 
 :::

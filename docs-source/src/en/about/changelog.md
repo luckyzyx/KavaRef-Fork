@@ -25,7 +25,7 @@ Time zone of version release date: **UTC+8**
 
 #### kavaref-android
 
-- Added Android platform base module with support for using `KavaRef` in environments with Min SDK 21
+- Added Android platform base module with support for using KavaRef in environments with Min SDK 21
 - Added Android Lint rules
 - Added R8/ProGuard configuration and Android platform logging implementation
 
@@ -64,7 +64,7 @@ Time zone of version release date: **UTC+8**
 #### 1.0.1 | 2025.07.06 &ensp;<Badge type="warning" text="stale" vertical="middle" />
 
 - `T.resolve()` has been deprecated because it has namespace pollution problems. It is now recommended to migrate to `T.asResolver()`
-- Removed the residual `block` method in `KavaRef`. If this method is used, you can manually implement it with `apply`
+- Removed the residual `block` method in KavaRef. If this method is used, you can manually implement it with `apply`
 
 #### 1.0.0 | 2025.06.25 &ensp;<Badge type="warning" text="stale" vertical="middle" />
 
