@@ -15,12 +15,6 @@ const containerTitles = {
     }
 };
 
-/** Exposes the active documentation build mode to configuration helpers. */
-export const env = {
-    // VitePress can load the config before Vite assigns NODE_ENV, so retain the CLI command as a dev fallback.
-    dev: process.env.NODE_ENV === 'development' || process.argv.includes('dev')
-};
-
 /** Provides Markdown renderer hooks shared by development and production builds. */
 export const markdown = {
     /** Localizes default custom-container titles while preserving titles declared in Markdown. */
