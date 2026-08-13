@@ -80,7 +80,7 @@ In the opened page, select the **Quick Start** section in the sidebar to continu
 
 ## Star History
 
-![Star History Chart](https://api.star-history.com/svg?repos=HighCapable/KavaRef&type=Date)
+[![Star History Chart](https://api.star-history.com/chart?repos=HighCapable/KavaRef&type=date&legend=top-left&sealed_token=FasaoGbSTG3t1i29WTCiySZLVE8D1s_W3kPOhK8WwgI7Mc7xy7Uwf_FCznjW4ymazCrzAyVCoGyD9K9jXjuhOO-yA0qiPbFuHwBtUWg4BoKRzpFp3FatsQ)](https://www.star-history.com/?repos=HighCapable%2FKavaRef&type=date&legend=top-left)
 
 ## Third-Party Open Source Usage Statement
 
